@@ -1,0 +1,19 @@
+<launch>
+  <!-- Gazebo'yu başlat ve testworld.sdf dünyasını yükle -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find robot_description)/worlds/testworld.sdf"/>
+  </include>
+
+  <!-- Robotun URDF dosyasını yükle -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find robot_description)/urdf/bumperbot.urdf.xacro" />
+
+  <!-- Robotu Gazebo'da spawn et -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model bumperbot" />
+
+  <!-- ROS Control için controller'ları yükle -->
+  <rosparam file="$(find robot_description)/config/control.yaml" command="load" />
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" args="joint_state_controller bumperbot_controller wheel_left_controller wheel_right_controller" />
+  <node name="simple_controller" pkg="robot_description" type="subscriber.py" output="screen"/>
+  <node name="keyboard_control_node" pkg="robot_description" type="publisher.py" output="screen"/>
+  <node name="pub_controller_node" pkg="robot_description" type="control.py" output="screen"/>
+</launch>
