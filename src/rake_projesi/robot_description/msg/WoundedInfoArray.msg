@@ -1,0 +1,1 @@
+WoundedInfo[] wounded_array

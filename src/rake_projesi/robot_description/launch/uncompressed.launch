@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="image_transport" type="republish" name="image_republisher" output="screen">
+        <param name="image_transport" value="compressed"/>
+        <remap from="in" to="/camera/image_raw"/>
+        <remap from="out" to="/camera/image_raw/uncompressed"/>
+    </node>
+</launch>
+
