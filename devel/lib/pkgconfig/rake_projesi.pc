@@ -1,8 +1,0 @@
-prefix=/mnt/c/Users/ros/catkin_ws/devel
-
-Name: rake_projesi
-Description: Description of rake_projesi
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
