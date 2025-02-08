@@ -11,21 +11,42 @@
       <param name="robot_description" command="$(find xacro)/xacro '$(find robot_description)/urdf/bumperbot.urdf.xacro'"/>
 
       <!-- Controller List Param -->
-      <param name="controller_list" value="bumperbot_controller"/>
+      <param name="controller_list" value="wheel_left_controller wheel_right_controller"/>
 
       <!-- Load Controller Configuration from YAML -->
       <rosparam file="$(find robot_description)/config/control.yaml" command="load"/>
     </plugin>
 
     <!-- Optional IMU Plugin -->
-    <plugin filename="libgazebo_ros_imu.so" name="gazebo_ros_imu">
+    <!-- <plugin filename="libgazebo_ros_imu.so" name="gazebo_ros_imu">
       <param name="imu_topic" value="imu/data"/>
-    </plugin>
+    </plugin> -->
 
     <!-- Optional Sensors Plugin -->
     <plugin filename="libgazebo_ros_sensors.so" name="gazebo_ros_sensors">
       <param name="sensor_topics" value="true"/>
     </plugin>
+
+    <reference name="wheel_left_link">
+      <mu1>1000000000000000.0</mu1>
+      <mu2>1000000000000000.0</mu2>
+      <kp>1000000000000.0</kp>
+      <kd>10.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+      <fdir1>1 0 0</fdir1>
+    </reference>
+
+    <reference name="wheel_right_link">
+      <mu1>1000000000000000.0</mu1>
+      <mu2>1000000000000000.0</mu2>
+      <kp>1000000000000.0</kp>
+      <kd>10.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+      <fdir1>1 0 0</fdir1>
+    </reference>
+
   </gazebo>
 
   <transmission name="wheel_left_trans">
@@ -233,6 +254,8 @@
   </joint>
 
   <link name="laser_link">
+   
+   
     <inertial>
       <origin xyz="-0.011945780406062 -0.000381929217680526 -0.0170649378129477" rpy="0 0 0" />
       <mass value="0.073084435549317" />
@@ -262,6 +285,8 @@
     <axis xyz="0 0 0" />
   </joint>
 
+
+  
   <material name="blue">
     <color rgba="0 0 1 1"/>
   </material>
@@ -274,4 +299,10 @@
   <material name="dark_grey">
     <color rgba="0.3 0.3 0.3 1"/>
   </material>
+  <material name="red">
+    <color rgba="0.3 0.0 0.0 1"/>
+  </material>
+  
+  <xacro:include filename="camera.xacro" />
+  <xacro:include filename="gps.xacro" />
 </robot>

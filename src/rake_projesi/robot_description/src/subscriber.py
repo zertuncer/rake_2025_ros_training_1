@@ -136,6 +136,13 @@ class SimpleController(object):
         self.transform_stamped_.header.stamp = rospy.Time.now()
         self.br_.sendTransform(self.transform_stamped_)
 
+    # rospy.loginfo(f"fi_left: {fi_left}, fi_right: {fi_right}")
+    # rospy.loginfo(f"fi_left: {fi_left}, fi_right: {fi_right}")
+    # rospy.loginfo(f"fi_left: {fi_left}, fi_right: {fi_right}")
+    # rospy.loginfo(f"fi_left: {fi_left}, fi_right: {fi_right}")
+    # rospy.loginfo(f"fi_left: {fi_left}, fi_right: {fi_right}")
+
+
 if __name__ == "__main__":
     rospy.init_node("simple_controller")
     wheel_radius = rospy.get_param("~wheel_radius", 0.1)  # Varsayılan değer: 0.1

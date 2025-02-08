@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gps_bot">
+    <!-- GPS Sensörünü İçeren Link -->
+    <link name="gps_link">
+        <inertial>
+            <mass value="0.1"/>
+            <origin xyz="0 0 0"/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertial>
+    </link>
+
+        <!-- GPS Sensörünü Robotun Ana Gövdesine Bağlama -->
+    <joint name="gps_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="gps_link"/>
+        <origin xyz="0 0 0.5"/>
+    </joint>
+
+    <!-- GPS Sensörünü Tanımlayan Plugin -->
+    <gazebo>
+        <sensor type="gps" name="gps_sensor">
+            <update_rate>10</update_rate>
+            <plugin name="gps_plugin" filename="libhector_gazebo_ros_gps.so"/>
+        </sensor>
+    </gazebo>
+
+
+</robot>
