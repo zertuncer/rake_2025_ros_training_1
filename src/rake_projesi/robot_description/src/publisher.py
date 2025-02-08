@@ -25,10 +25,10 @@ def keyboard_control():
         key = stdscr.getch()
 
         if key == curses.KEY_UP:
-            current_linear_speed = min(current_linear_speed + speed_increment, 0.7)
+            current_linear_speed = 0.7
             current_angular_speed = 0.0
         elif key == curses.KEY_DOWN:
-            current_linear_speed = max(current_linear_speed - speed_increment, -0.7)
+            current_linear_speed = -0.7
             current_angular_speed = 0.0
         elif key == curses.KEY_LEFT:
             current_linear_speed = 0.0

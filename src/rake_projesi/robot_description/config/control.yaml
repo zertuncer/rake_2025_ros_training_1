@@ -2,24 +2,20 @@ joint_state_controller:
   type: joint_state_controller/JointStateController
   publish_rate: 50
 
-bumperbot_controller:
-  type: velocity_controllers/JointVelocityController
-  left_wheel: wheel_left_joint
-  right_wheel: wheel_right_joint
-  wheel_separation: 0.14  # Tekerlekler arası mesafe
-  wheel_radius: 0.035     # Tekerlek yarıçapı
-  publish_rate: 50
-  odom_frame_id: odom
-  base_frame_id: base_footprint
-  enable_odom_tf: true
-
 wheel_left_controller:
   type: velocity_controllers/JointVelocityController
   joint: wheel_left_joint
+  pid:
+    p: 100.0
+    i: 0.01
+    d: 0.1
   publish_rate: 50
 
 wheel_right_controller:
   type: velocity_controllers/JointVelocityController
   joint: wheel_right_joint
+  pid:
+    p: 100.0
+    i: 0.01
+    d: 0.1
   publish_rate: 50
-  pid: {p: 10.0, i: 0.1, d: 0.01}

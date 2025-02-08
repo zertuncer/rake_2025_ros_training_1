@@ -5,7 +5,9 @@
 
     <!-- <arg name="rvizconfig" default="$(find robot_description)/config/urdf.rviz"/> -->
 
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
+        <param name="publish_frequency" value="50.0" />
+    </node>
 
     <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_state_publisher_gui"/>
 

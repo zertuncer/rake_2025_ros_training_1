@@ -12,8 +12,95 @@
 
   <!-- ROS Control için controller'ları yükle -->
   <rosparam file="$(find robot_description)/config/control.yaml" command="load" />
-  <node name="controller_spawner" pkg="controller_manager" type="spawner" args="joint_state_controller bumperbot_controller wheel_left_controller wheel_right_controller" />
+  
+  <!-- Human Model'ini spawn et (person_walking modeli) -->
+  <node name="spawn_person_walking_model_1" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/person_walking/model.sdf -model person_walking_1 -x 0.198420 -y 3.597512 -z 0 -R 0 -P 0 -Y 0.627994" />
+  <node name="spawn_person_walking_model_2" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/person_walking/model.sdf -model person_walking_2 -x 3.573486 -y 3.673064 -z 0 -R 0 -P 0 -Y 0" />
+  <node name="spawn_person_standing_model" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/person_standing/model.sdf -model person_standing -x 0.350826 -y 0.974034 -z 0 -R 0 -P 0 -Y 3.108645" />
+
+  <node name="spawn_person_construction_model1" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/construction_cone/model.sdf -model construction_cone -x 1.45181 -y 1.20722 -z 0 -R 0 -P 0 -Y 0" />
+  <node name="spawn_person_construction_model2" pkg="gazebo_ros" type="spawn_model" output="screen"
+    args="-sdf -file /home/zer/.gazebo/models/construction_cone/model.sdf -model construction_cone_clone -x 2.34173 -y 1.93626 -z 0 -R 0 -P 0 -Y -3" />
+  <node name="spawn_person_construction_model3" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/construction_cone/model.sdf -model construction_cone_clone_clone -x 4.3032 -y -0.25727 -z 0 -R 0 -P 0 -Y -0.000643" />
+  <node name="spawn_person_construction_model4" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/construction_cone/model.sdf -model construction_cone_clone_clone_clone -x 0.403485 -y 0.640351 -z 0 -R 0 -P 0 -Y 3.108645" />
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" args="joint_state_controller wheel_left_controller wheel_right_controller" />
   <node name="simple_controller" pkg="robot_description" type="subscriber.py" output="screen"/>
   <node name="keyboard_control_node" pkg="robot_description" type="publisher.py" output="screen"/>
-  <node name="pub_controller_node" pkg="robot_description" type="control.py" output="screen"/>
+  <node name="pub_controller_node" pkg="robot_description" type="yolo.py" output="screen"/>
+
+
+  <!-- image_transport republish node -->
+  <node pkg="image_transport" type="republish" name="image_republisher" output="screen" args="compressed raw">
+    <!-- image_transport parametresi -->
+    <param name="image_transport" value="compressed"/>
+    <!-- Giriş ve çıkış topic remap işlemi -->
+    <remap from="in" to="/image_raw"/>
+    <remap from="out" to="/bumper_bot/front_camera"/>
+  </node>
+
+  <!-- rqt_image_view node -->
+  <node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" output="screen">
+    <remap from="/image" to="/detection_result"/>
+  </node>
+
+  <!-- Kameradan görüntü al ve nesne tespiti yap -->
+  <node name="yolo_detector_node" pkg="robot_description" type="yolo.py" output="screen">
+    <param name="image_topic" value="/bumper_bot/front_camera"/>
+  </node>
+
 </launch>
+
+
+<!-- <launch>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find robot_description)/worlds/testworld.sdf"/>
+  </include>
+
+
+  <param name="robot_description" command="$(find xacro)/xacro $(find robot_description)/urdf/bumperbot.urdf.xacro" />
+
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model bumperbot" />
+
+  <rosparam file="$(find robot_description)/config/control.yaml" command="load" />
+  
+  <node name="spawn_person_walking_model_1" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/person_walking/model.sdf -model person_walking_1 -x 0.198420 -y 3.597512 -z 0 -R 0 -P 0 -Y 0.627994" />
+  <node name="spawn_person_walking_model_2" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/person_walking/model.sdf -model person_walking_2 -x 3.573486 -y 3.673064 -z 0 -R 0 -P 0 -Y 0" />
+  <node name="spawn_person_standing_model" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/person_standing/model.sdf -model person_standing -x 0.350826 -y 0.974034 -z 0 -R 0 -P 0 -Y 3.108645" />
+
+  <node name="spawn_person_construction_model1" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/construction_cone/model.sdf -model construction_cone -x 1.45181 -y 1.20722 -z 0 -R 0 -P 0 -Y 0" />
+  <node name="spawn_person_construction_model2" pkg="gazebo_ros" type="spawn_model" output="screen"
+    args="-sdf -file /home/zer/.gazebo/models/construction_cone/model.sdf -model construction_cone_clone -x 2.34173 -y 1.93626 -z 0 -R 0 -P 0 -Y -3" />
+  <node name="spawn_person_construction_model3" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/construction_cone/model.sdf -model construction_cone_clone_clone -x 4.3032 -y -0.25727 -z 0 -R 0 -P 0 -Y -0.000643" />
+  <node name="spawn_person_construction_model4" pkg="gazebo_ros" type="spawn_model" output="screen"
+      args="-sdf -file /home/zer/.gazebo/models/construction_cone/model.sdf -model construction_cone_clone_clone_clone -x 0.403485 -y 0.640351 -z 0 -R 0 -P 0 -Y 3.108645" />
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" args="joint_state_controller wheel_left_controller wheel_right_controller" />
+  <node name="simple_controller" pkg="robot_description" type="subscriber.py" output="screen"/>
+  <node name="keyboard_control_node" pkg="robot_description" type="publisher.py" output="screen"/>
+
+
+  <node pkg="image_transport" type="republish" name="image_republisher" output="screen" args="compressed raw">
+    <param name="image_transport" value="compressed"/>
+    <remap from="in" to="/image_raw"/>
+    <remap from="out" to="/bumper_bot/front_camera"/>
+  </node>
+
+  <node pkg="rqt_image_view" type="rqt_image_view" name="rqt_image_view" output="screen">
+    <remap from="/image" to="/bumper_bot/front_camera"/>
+  </node>
+  </launch> -->
+
